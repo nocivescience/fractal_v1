@@ -1,11 +1,9 @@
 from manim import *
-class ExampleScene(Scene):
-    CONFIG={
-        'colors':[GREEN,BLUE_A,YELLOW,RED],
+CONFIG={
+        'points':[
+            np.array([-4,0,0]),
+            np.array([4,1,0])
+        ]
     }
-    def construct(self):
-        path=MathTex('2\cdot \pi+\sigma^3')
-        for element,color in zip(path.family_members_with_points(),self.CONFIG['colors']):
-            element.set_color(color)
-        self.play(Create(path))
-        self.wait()
+dot=np.cross(CONFIG['points'][0],CONFIG['points'][1])
+print(dot)
