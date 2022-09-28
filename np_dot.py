@@ -1,16 +1,28 @@
 from manim import *
-class NpDotScene(Scene):
-    CONFIG={
-        'points':[
-            np.array([-1,0,0]),
-            np.array([1,0,0])
-        ]
+class FractalCreation(Scene):
+    CONFIG = {
+        "fractal_class" : PentagonalFractal,
+        "max_order" : 5,
+        "transform_kwargs" : {
+            "path_arc" : np.pi/6,
+            "lag_ratio" : 0.5,
+            "run_time" : 2,
+        },
+        "fractal_kwargs" : {},
     }
     def construct(self):
-        dot_1=Dot().move_to(self.CONFIG['points'][0])
-        dot_2=Dot().move_to(self.CONFIG['points'][1])
-        dot_3=Dot().move_to(
-            midpoint(self.CONFIG['points'][0],self.CONFIG['points'][1])
-        )
-        self.play(Create(dot_1),Create(dot_2),Create(dot_3))
+        fractal = self.CONFIG['fractal_class'](order = 0, **self.fractal_kwargs)
+        self.play(FadeIn(fractal))
+        for order in range(1, self.max_order+1):
+            new_fractal = self.fractal_class(
+                order = order,
+                **self.CONFIG['fractal_kwargs']
+            )
+            fractal.align_data(new_fractal)
+            self.play(Transform(
+                fractal, new_fractal,
+                **self.CONFIG['transform_kwargs']
+            ))
+            self.wait()
         self.wait()
+        self.fractal = fractal
